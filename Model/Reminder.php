@@ -1,16 +1,15 @@
 <?php
 
-namespace Flower\ModelBundle\Entity;
+namespace Flower\PlannerBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Flower\UserBundle\Model\User;
 /**
  * Reminder
  */
-class Reminder
+abstract class Reminder
 {
     public static $TYPE_EMAIL = 1;
     public static $TYPE_NOTIFICATION = 2;
@@ -27,59 +26,66 @@ class Reminder
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="unity", type="integer")
      */
-    private $unity;
+    protected $unity;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="amount", type="integer")
      */
-    private $amount;
+    protected $amount;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="type", type="integer")
      */
-    private $type;
+    protected $type;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
      */
-    private $date;
+    protected $date;
     /**
-     * @ManyToOne(targetEntity="Event", inversedBy="reminders")
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Planner\Event", inversedBy="reminders")
      * @JoinColumn(name="event_reminder_id", referencedColumnName="id")
      * */
-    private $event;
+    protected $event;
 
     /**
      * @var DateTime
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="created", type="datetime")
      */
-    private $created;
+    protected $created;
 
     /**
      * @var DateTime
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="updated", type="datetime")
      */
-    private $updated;
+    protected $updated;
     /**
-     * @ORM\ManyToOne(targetEntity="\Flower\UserBundle\Model\User")
+     * @ORM\ManyToOne(targetEntity="\Flower\ModelBundle\Entity\User\User")
      * @ORM\JoinColumn(name="user", referencedColumnName="id")
      */
-     private $user;
+     protected $user;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+    }
     /**
      * Get id
      *
@@ -185,10 +191,10 @@ class Reminder
     /**
      * Set event
      *
-     * @param \Flower\ModelBundle\Entity\event $event
+     * @param \Flower\ModelBundle\Entity\Planner\Event $event
      * @return Reminder
      */
-    public function setEvent(\Flower\ModelBundle\Entity\event $event = null)
+    public function setEvent(\Flower\ModelBundle\Entity\Planner\Event $event = null)
     {
         $this->event = $event;
 
@@ -198,7 +204,7 @@ class Reminder
     /**
      * Get event
      *
-     * @return \Flower\ModelBundle\Entity\event 
+     * @return \Flower\ModelBundle\Entity\Planner\Event 
      */
     public function getEvent()
     {
@@ -282,10 +288,10 @@ class Reminder
     /**
      * Set user
      *
-     * @param \Flower\UserBundle\Model\User $user
+     * @param \Flower\ModelBundle\Entity\User\User $user
      * @return Reminder
      */
-    public function setUser(\Flower\UserBundle\Model\User $user = null)
+    public function setUser(\Flower\ModelBundle\Entity\User\User $user = null)
     {
         $this->user = $user;
 
@@ -295,7 +301,7 @@ class Reminder
     /**
      * Get user
      *
-     * @return \Flower\UserBundle\Model\User
+     * @return \Flower\ModelBundle\Entity\User\User
      */
     public function getUser()
     {

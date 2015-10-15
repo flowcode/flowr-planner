@@ -1,0 +1,201 @@
+{% extends "FlowerCoreBundle::layout.html.twig" %}
+
+{% block title %}{{ '%entity% list'|trans({'%entity%': 'Event'}, 'Event') }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <section class="content-header">
+        <h1>{{ 'Events' | trans({}, 'Event')}}</h1>
+    </section>
+    <section class="content">
+        <div class="box">
+            <div class="col-xs-12">
+                <div class="box-header">
+                        <h2 class="box-title">
+                            {{ 'Today' | trans({}, 'Event')}}
+                        </h2>
+                        <div class="box-tools pull-right">
+                            <a class="btn btn-link btn-xs" href={{ path('event_new') }}>
+                                <i class="fa fa-plus"></i> {{ 'Create a new %entity%'|trans({'%entity%': 'Event'}, 'Event') }}
+                            </a>
+                        </div>
+                </div>
+                <div class="box-body">
+                    
+
+                    {% for event in today %}
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="col-sm-1 text-center">
+                                    <div style="font-size: 20px;" title="{{ event.startDate | date('d/m/y H:i') }}">{{ event.startDate | date('H:i') }}</div>
+                                </div>
+                                <a class="cursor-pointer"  data-toggle="modal" data-target="#bs-example-modal-lg-{{event.id}}">
+                                    <div class="col-sm-11">
+                                        <blockquote>
+                                                <h4 >{{ event.title }}</h4>
+                                            <small>{{ event.address }}</small>
+                                        </blockquote>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="modal fade bs-example-modal-lg" tabindex="-1" id="bs-example-modal-lg-{{event.id}}" role="dialog" aria-labelledby="myLargeModalLabel">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title">Event</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="pull-right">
+                                                <a style="font-size: 22px;" class="btn btn-link  btn-sm" href="{{ path('event_edit', {id: event.id}) }}">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>
+                                                {% if event.owner.id == app.user.id %}
+                                                    <a style="font-size: 22px;" id="" class="delete btn btn-link  btn-sm" action="{{ path('event_delete', {id: event.id}) }}">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-2 text-center">
+                                                    <div style="font-size: 60px;">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </div>
+                                                    <div class="" style="font-size: 22px;">
+                                                        {{ event.startDate | date('d/m/y H:i') }}
+                                                        -
+                                                        {{ event.endDate | date('H:i') }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    <h1 >{{event.title}}</h1>
+                                                    <small>{{event.address}}</small>
+                                                    <p>{{event.description | raw}}</p>
+                                                    {% if event.users |length >0 %}
+                                                        <p> <i class="fa fa-user"></i>
+                                                            {% for user in event.users %}
+                                                                {{user.username}}{% if loop.last %}{% else %} ,{% endif %}
+                                                            {% endfor %}
+                                                        </p>
+                                                    {% endif %}
+                                                    {% if event.contacts |length >0 %}
+                                                        <p> <i class="fa fa-users"></i>
+                                                        {% for user in event.contacts %}
+                                                            {{user.lastname}} {{user.firstname}}
+                                                            {% if loop.last %}{% else %} ,{% endif %}
+                                                        {% endfor %}
+                                                        </p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="box-header">
+                    <h2 class="box-title">
+                        {{ 'Next' | trans({}, 'Event')}}
+                    </h2>
+                </div>
+                <div class="box-body">
+                    {% for event in next %}
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="col-sm-1 text-center">
+                                    <div style="font-size: 20px;" title="{{ event.startDate | date('d/m/y H:i') }}">{{ event.startDate | date('D M') }}</div>
+                                </div>
+                                <a class="cursor-pointer"  data-toggle="modal" data-target="#bs-example-modal-lg-{{event.id}}">
+                                    <div class="col-sm-11">
+                                        <blockquote>
+                                                <h4>{{ event.title }} </h4>
+                                            <small>{{ event.address }}</small>
+                                        </blockquote>
+                                    </div>
+                                </a>
+                            </div>
+                             <div class="modal fade bs-example-modal-lg" tabindex="-1" id="bs-example-modal-lg-{{event.id}}" role="dialog" aria-labelledby="myLargeModalLabel">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title">event</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="pull-right">
+                                                <a style="font-size: 22px;" class="btn btn-link  btn-sm" href="{{ path('event_edit', {id: event.id}) }}">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>
+
+                                                <a style="font-size: 22px;" id="" class="delete btn btn-link  btn-sm" action="{{ path('event_delete', {id: event.id}) }}">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-2 text-center">
+                                                    <div style="font-size: 60px;">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </div>
+                                                    <div class="" style="font-size: 22px;">
+                                                        {{ event.startDate | date('d/m/y H:i') }}
+                                                        -
+                                                        {{ event.endDate | date('H:i') }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    <h1>{{event.title}}</h1>
+                                                    <small>{{event.address}}</small>
+                                                    <p>{{event.description | raw}}</p>
+                                                    {% if event.users |length >0 %}
+                                                        <p> <i class="fa fa-user"></i>
+                                                            {% for user in event.users %}
+                                                                {{user.username}}{% if loop.last %}{% else %} ,{% endif %}
+                                                            {% endfor %}
+                                                        </p>
+                                                    {% endif %}
+                                                    {% if event.contacts |length >0 %}
+                                                        <p> <i class="fa fa-users"></i>
+                                                        {% for user in event.contacts %}
+                                                            {{user.lastname}} {{user.firstname}}
+                                                            {% if loop.last %}{% else %} ,{% endif %}
+                                                        {% endfor %}
+                                                        </p>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="box-footer">
+
+            </div>
+
+    </section>        
+                    <div id="delete_confirm" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h3>{{ 'Confirm delete'|trans({}, 'Task') }}</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <p>{{ 'You are about to delete an item'|trans({}, 'Task') }}, {{ 'this procedure is irreversible'|trans({}, 'Task') }}.</p>
+                                    <p>{{ 'Do you want to proceed?'|trans({}, 'Task') }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-danger">{{ 'Yes'|trans({}, 'Task') }}</button>
+                                    <button class="btn btn-default" data-dismiss="modal">{{ 'No'|trans({}, 'Task') }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+{% endblock %}

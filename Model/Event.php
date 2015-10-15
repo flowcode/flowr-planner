@@ -1,6 +1,6 @@
 <?php
 
-namespace Flower\ModelBundle\Entity;
+namespace Flower\PlannerBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinTable;
@@ -10,12 +10,12 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation\Groups;
-use Flower\UserBundle\Model\User;
+
 
 /**
  * Event
  */
-class Event
+abstract class Event
 {
     /**
      * @var integer
@@ -25,7 +25,7 @@ class Event
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Groups({"search"})
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
@@ -33,7 +33,7 @@ class Event
      * @ORM\Column(name="title", type="string", length=255)
      * @Groups({"search"})
      */
-    private $title;
+    protected $title;
 
     /**
      * @var string
@@ -41,7 +41,7 @@ class Event
      * @ORM\Column(name="address", type="string", length=255,nullable=true)
      * @Groups({"search"})
      */
-    private $address;
+    protected $address;
 
     /**
      * @var string
@@ -49,69 +49,105 @@ class Event
      * @ORM\Column(name="description", type="text", nullable=true)
      * @Groups({"search"})
      */
-    private $description;
+    protected $description;
 
     /**
-     * @ManyToMany(targetEntity="Contact", inversedBy="events")
-     * @JoinTable(name="contact_event")
-     */
-    private $contacts;
+     * @ManyToMany(targetEntity="\Flower\ModelBundle\Entity\Contact")
+     * @JoinTable(name="event_contact",
+     *      joinColumns={@JoinColumn(name="event_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="contact_id", referencedColumnName="id")}
+     *      )
+     **/
+    protected $contacts;
 
-    /**
-     * @ManyToMany(targetEntity="\Flower\UserBundle\Model\User", inversedBy="events")
-     * @JoinTable(name="user_event")
-     */
-    private $users;
-    /**
-     * @ManyToOne(targetEntity="\Flower\UserBundle\Model\User", inversedBy="events")
-     * @JoinColumn(name="user_event_id", referencedColumnName="id")
-     * @Groups({"search"})
-     * */
-    private $owner;
     /**
      * @var DateTime
      *
      * @ORM\Column(name="startDate", type="datetime")
      * @Groups({"search"})
      */
-    private $startDate;
+    protected $startDate;
     /**
      * @var DateTime
      *
      * @ORM\Column(name="endDate", type="datetime",nullable=true)
      * @Groups({"search"})
      */
-    private $endDate;
+    protected $endDate;
     /**
      * @var float
      *
      * @ORM\Column(name="latitude", type="float",nullable=true)
      */
-    private $latitude;
+    protected $latitude;
         /**
      * @var float
      *
      * @ORM\Column(name="longitude", type="float",nullable=true)
      */
-    private $longitude;
+    protected $longitude;
     /**
      * @OneToMany(targetEntity="Reminder", mappedBy="event", cascade={"persist","remove"})
      * */
-    private $reminders;
+    protected $reminders;
 
     /**
      * @var DateTime
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="created", type="datetime")
      */
-    private $created;
+    protected $created;
     /**
      * @var DateTime
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="updated", type="datetime")
      */
-    private $updated;
+    protected $updated;
 
+    /**
+     * @ManyToMany(targetEntity="\Flower\ModelBundle\Entity\User\User", inversedBy="events")
+     * @JoinTable(name="user_event")
+     */
+    protected $users;
+    /**
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\User\User", inversedBy="events")
+     * @JoinColumn(name="user_event_id", referencedColumnName="id")
+     * @Groups({"search"})
+     * */
+    protected $owner;
+
+    /**
+     * Add users
+     *
+     * @param \Flower\ModelBundle\Entity\User\User $users
+     * @return Event
+     */
+    public function addUser(\Flower\ModelBundle\Entity\User\User $users)
+    {
+        $this->users[] = $users;
+
+        return $this;
+    }
+
+    /**
+     * Remove users
+     *
+     * @param \Flower\ModelBundle\Entity\User\User $users
+     */
+    public function removeUser(\Flower\ModelBundle\Entity\User\User $users)
+    {
+        $this->users->removeElement($users);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
     /**
      * Get id
      *
@@ -196,7 +232,7 @@ class Event
     public function __construct()
     {
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        
         $this->reminders = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -280,45 +316,12 @@ class Event
     }
 
     /**
-     * Add users
-     *
-     * @param \Flower\UserBundle\Model\User $users
-     * @return Event
-     */
-    public function addUser(\Flower\UserBundle\Model\User $users)
-    {
-        $this->users[] = $users;
-
-        return $this;
-    }
-
-    /**
-     * Remove users
-     *
-     * @param \Flower\UserBundle\Model\User $users
-     */
-    public function removeUser(\Flower\UserBundle\Model\User $users)
-    {
-        $this->users->removeElement($users);
-    }
-
-    /**
-     * Get users
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getUsers()
-    {
-        return $this->users;
-    }
-
-    /**
      * Set owner
      *
-     * @param \Flower\UserBundle\Model\User $owner
+     * @param \Flower\ModelBundle\Entity\User\User $owner
      * @return Event
      */
-    public function setOwner(\Flower\UserBundle\Model\User $owner = null)
+    public function setOwner(\Flower\ModelBundle\Entity\User\User $owner = null)
     {
         $this->owner = $owner;
 
@@ -328,7 +331,7 @@ class Event
     /**
      * Get owner
      *
-     * @return \Flower\UserBundle\Model\User
+     * @return \Flower\ModelBundle\Entity\User\User
      */
     public function getOwner()
     {
@@ -384,10 +387,10 @@ class Event
     /**
      * Add reminders
      *
-     * @param \Flower\ModelBundle\Entity\Reminder $reminders
+     * @param \Flower\ModelBundle\Entity\Planner\Reminder $reminders
      * @return Event
      */
-    public function addReminder(\Flower\ModelBundle\Entity\Reminder $reminder)
+    public function addReminder(\Flower\ModelBundle\Entity\Planner\Reminder $reminder)
     {
         $reminder->setEvent($this);
         $this->reminders[] = $reminder;
@@ -404,9 +407,9 @@ class Event
     /**
      * Remove reminders
      *
-     * @param \Flower\ModelBundle\Entity\Reminder $reminders
+     * @param \Flower\ModelBundle\Entity\Planner\Reminder $reminders
      */
-    public function removeReminder(\Flower\ModelBundle\Entity\Reminder $reminders)
+    public function removeReminder(\Flower\ModelBundle\Entity\Planner\Reminder $reminders)
     {
         $reminders->setEvent(null);
         $this->reminders->removeElement($reminders);
