@@ -52,7 +52,7 @@ abstract class Event
     protected $description;
 
     /**
-     * @ManyToMany(targetEntity="\Flower\ModelBundle\Entity\Contact")
+     * @ManyToMany(targetEntity="\Flower\ModelBundle\Entity\Clients\Contact")
      * @JoinTable(name="event_contact",
      *      joinColumns={@JoinColumn(name="event_id", referencedColumnName="id")},
      *      inverseJoinColumns={@JoinColumn(name="contact_id", referencedColumnName="id")}
@@ -285,10 +285,10 @@ abstract class Event
     /**
      * Add contacts
      *
-     * @param \Flower\ModelBundle\Entity\Contact $contacts
+     * @param \Flower\ModelBundle\Entity\Clients\Contact $contacts
      * @return Event
      */
-    public function addContact(\Flower\ModelBundle\Entity\Contact $contacts)
+    public function addContact(\Flower\ModelBundle\Entity\Clients\Contact $contacts)
     {
         $this->contacts[] = $contacts;
 
@@ -298,9 +298,9 @@ abstract class Event
     /**
      * Remove contacts
      *
-     * @param \Flower\ModelBundle\Entity\Contact $contacts
+     * @param \Flower\ModelBundle\Entity\Clients\Contact $contacts
      */
-    public function removeContact(\Flower\ModelBundle\Entity\Contact $contacts)
+    public function removeContact(\Flower\ModelBundle\Entity\Clients\Contact $contacts)
     {
         $this->contacts->removeElement($contacts);
     }

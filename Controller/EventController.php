@@ -94,7 +94,7 @@ class EventController extends Controller
      *
      * @Route("/create", name="event_create")
      * @Method("POST")
-     * @Template("FlowerCoreBundle:Event:new.html.twig")
+     * @Template("FlowerPlannerBundle:Event:new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -190,7 +190,7 @@ class EventController extends Controller
      *
      * @Route("/{id}/update", name="event_update", requirements={"id"="\d+"})
      * @Method("PUT")
-     * @Template("FlowerCoreBundle:Event:edit.html.twig")
+     * @Template("FlowerPlannerBundle:Event:edit.html.twig")
      */
     public function updateAction(Event $event, Request $request)
     {

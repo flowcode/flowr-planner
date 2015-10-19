@@ -30,7 +30,7 @@ class EventType extends AbstractType
                 ->add('address', 'genemu_jquerygeolocation',
                                       array('label' => false, 'required' => false))
                 ->add('contacts','genemu_jqueryselect2_entity',
-                        array('class' => 'Flower\ModelBundle\Entity\Contact',
+                        array('class' => 'Flower\ModelBundle\Entity\Clients\Contact',
                                 'property' => 'lastname',
                                 'multiple' => true,
                                 'required'=>false))
