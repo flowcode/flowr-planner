@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Genemu\Bundle\FormBundle\Geolocation\AddressGeolocation;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Flowcode\NotificationBundle\Entity\EmailNotification;
 /**
  * Event controller.
  *
