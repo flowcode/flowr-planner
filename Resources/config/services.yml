@@ -8,3 +8,7 @@ services:
         arguments: ["@security.context"]
         tags:
             - { name: form.type, alias: event_type }   
+    flower.core.service.reminder:
+        class: Flower\PlannerBundle\Service\ReminderService
+        calls:
+          - [ setContainer,[ @service_container ]]
