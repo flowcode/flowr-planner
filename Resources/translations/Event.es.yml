@@ -1,0 +1,11 @@
+'%entity% creation': 'Creación de %entity%'
+'%entity% edition': '%entity% edition'   # FIXME
+'%entity% list': 'Lista de %entity%'
+'Create a new %entity%': 'Crear nueva %entity%'
+Event: Evento
+Events: Eventos
+Next: Siguiente
+Reminders: Recordatorios
+Save: Guardar
+'Save and add': 'Guardar y agregar otro'
+Today: Hoy
