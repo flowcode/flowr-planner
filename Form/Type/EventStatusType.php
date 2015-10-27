@@ -1,6 +1,6 @@
 <?php
 
-namespace Flower\BoardBundle\Form\Type;
+namespace Flower\PlannerBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

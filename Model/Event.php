@@ -119,7 +119,6 @@ abstract class Event
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Planner\EventStatus")
      * @JoinColumn(name="status_id", referencedColumnName="id")
-     * @Groups({"search"})
      * */
     protected $status;
 

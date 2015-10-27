@@ -3,6 +3,12 @@
 namespace Flower\PlannerBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToMany;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation\Groups;
 
 /**
@@ -12,11 +18,9 @@ use JMS\Serializer\Annotation\Groups;
 abstract  class EventStatus
 {
 
-    const STATUS_BACKLOG = "backlog";
-    const STATUS_TODO = "todo";
-    const STATUS_DOING = "doing";
+    const STATUS_PENDING = "pending";
+    const STATUS_RESCHEDULE = "reschedule";
     const STATUS_DONE = "done";
-    const STATUS_CLOSED = "closed";
 
     /**
      * @var integer

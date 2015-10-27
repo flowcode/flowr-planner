@@ -3,7 +3,6 @@
 namespace Flower\PlannerBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Flower\ModelBundle\Entity\Planner\EventStatus;
 
 /**
  * EventStatusRepository
