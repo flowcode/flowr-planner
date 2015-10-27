@@ -117,6 +117,12 @@ abstract class Event
     protected $owner;
 
     /**
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Planner\EventStatus")
+     * @JoinColumn(name="status_id", referencedColumnName="id")
+     * */
+    protected $status;
+
+    /**
      * Add users
      *
      * @param \Flower\ModelBundle\Entity\User\User $users
@@ -479,5 +485,28 @@ abstract class Event
     public function getUpdated()
     {
         return $this->updated;
+    }
+
+    /**
+     * Set status
+     *
+     * @param \Flower\ModelBundle\Entity\Planner\EventStatus $status
+     * @return Event
+     */
+    public function setStatus(\Flower\ModelBundle\Entity\Planner\EventStatus $status = null)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return \Flower\ModelBundle\Entity\Planner\EventStatus 
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }
