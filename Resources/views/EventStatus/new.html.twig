@@ -1,0 +1,35 @@
+{% extends "FlowerCoreBundle::layout.html.twig" %}
+
+{% block title %}{{ '%entity% creation'|trans({'%entity%': 'EventStatus'}, 'EventStatus') }} - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <section class="content-header">
+        <h1><a href="{{ path('admin_dash') }}"> {{ 'Settings'|trans}}</a>
+            /
+            <a href="{{ path('eventstatus') }}"> {{ '%entity% List'|trans({'%entity%': 'EventStatus'}, 'EventStatus') }}</a>
+            /
+            {{ 'EventStatus' | trans({}, 'EventStatus')}}
+        </h1>
+
+    </section>        
+    <section class="content">
+        <div class="box">
+            <div class="box-body">
+                {{ form_start(form, {action: path('eventstatus_create')}) }}
+                    {{ form_widget(form) }}
+                    <p>
+                        <button class="btn btn-primary" type="submit">{{ 'Create'|trans({}, 'EventStatus') }}</button>
+                    </p>
+                {{ form_end(form) }}
+            </div>
+            <div class="box-footer">
+                        
+        <div class="btn-group record_actions">
+
+
+        </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}
