@@ -1,7 +1,7 @@
-'%entity% creation': 'Creación de %entity%'
-'%entity% edition': '%entity% edition'   # FIXME
-'%entity% list': 'Lista de %entity%'
-'Create a new %entity%': 'Crear nueva %entity%'
+'%entity% creation': 'Creación de Evento'
+'%entity% edition': 'Edición de Evento'
+'%entity% list': 'Lista de Eventos'
+'Create a new %entity%': 'Crear nuevo Evento'
 Event: Evento
 Events: Eventos
 Next: Siguientes
@@ -9,3 +9,14 @@ Reminders: Recordatorios
 Save: Guardar
 'Save and add': 'Guardar y agregar otro'
 Today: Hoy
+remove: quitar
+Add a Reminder: Agregar recordatorio
+Start date: Fecha de inicio
+End date: Fecha de fin
+Status: Estados
+Contacts: Contactos
+Users: Usuarios
+Description: Descriptción
+Address: Dirección
+Title: Titulo
+New Event: Nuevo Evento

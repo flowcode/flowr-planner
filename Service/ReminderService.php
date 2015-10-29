@@ -40,7 +40,6 @@ class ReminderService implements ContainerAwareInterface
     /**
      * This methos search all the pendings reminders for this minute and send notifications.
      * @author Francisco Memoli <fmemoli@flowcode.com.ar>
-     * @date   2015-09-24
      * @return void
      */
     public function run(){

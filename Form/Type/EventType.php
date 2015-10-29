@@ -27,7 +27,7 @@ class EventType extends AbstractType
         $builder
                 ->add('title')
                 ->add('description', null, array('required' => false, 'attr' => array('class' => 'textarea-wysihtml5')))
-                ->add('status', null, array('required' => true))
+                ->add('status', null, array('required' => false))
                 ->add('address', 'genemu_jquerygeolocation',
                                       array('label' => false, 'required' => false))
                 ->add('contacts','genemu_jqueryselect2_entity',

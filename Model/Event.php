@@ -118,7 +118,7 @@ abstract class Event
 
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Planner\EventStatus")
-     * @JoinColumn(name="status_id", referencedColumnName="id")
+     * @JoinColumn(name="status_id", referencedColumnName="id",nullable=true)
      * */
     protected $status;
 

@@ -1,0 +1,21 @@
+'%entity% List': 'Lista de Estados de eventos'
+'%entity% creation': 'Creación de estado de evento'
+'%entity% edit': 'Edición de estado de eventos'
+'%entity% List': 'Lista de estado de eventos'
+Actions: Acciones
+'Confirm delete': 'Confirmar borrado'
+Create: Crear
+'Create a new %entity%': 'Crear nuevo estado de evento'
+Delete: Borrar
+Description: Descripción
+'Do you want to proceed?': '¿Desea continuar de todos modos?'
+edit: editar
+EventStatus: Estado de eventos
+Id: Id
+Name: Nombre
+'No': 'No'
+'Yes': 'Si'
+'You are about to delete an item': 'Usted esta por borrar un elemento'
+edit: editar
+show: ver
+'this procedure is irreversible': 'esta accion será irreversible'
