@@ -62,7 +62,7 @@ class EventController extends Controller
         $event->addReminder($reminder1);
         $reminder2 = new Reminder();
         $reminder2->setUnity(Reminder::$UNITY_MINUTES);
-        $reminder2->setType(Reminder::$TYPE_NOTIFICATION);
+        $reminder2->setType(Reminder::$TYPE_EMAIL);
         $reminder2->setAmount(10);
         $event->addReminder($reminder2);
         $form = $this->createForm($this->get('form.type.event'), $event, array(
@@ -167,7 +167,7 @@ class EventController extends Controller
         if(count($event->getReminders()) == 0){
             $newReminder = new Reminder();
             $newReminder->setUnity(Reminder::$UNITY_MINUTES);
-            $newReminder->setType(Reminder::$TYPE_NOTIFICATION);
+            $newReminder->setType(Reminder::$TYPE_EMAIL);
             $newReminder->setAmount(10);
             $event->addReminder($newReminder);
         }
