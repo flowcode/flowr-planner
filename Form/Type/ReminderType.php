@@ -17,7 +17,7 @@ class ReminderType extends AbstractType
     {
         $builder
                 ->add('type', 'choice', array(
-                        'choices' => array('1' => 'e-mail', '2' => 'SMS','3' => 'Notification')))
+                        'choices' => array('1' => 'e-mail')))
                 ->add('unity', 'choice', array(
                         'choices' => array(Reminder::$UNITY_MINUTES => 'minutes'
                                         ,Reminder::$UNITY_HOUR => 'hours'
