@@ -105,7 +105,7 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="col-sm-1 text-center">
-                                    <div style="font-size: 20px;" title="{{ event.startDate | date('d/m/y H:i') }}">{{ event.startDate | date('D') | trans }} {{ event.startDate | date('M') | trans }}</div>
+                                    <div style="font-size: 20px;" title="{{ event.startDate | date('fullDateTime'|trans) }}">{{ event.startDate | date('D') | trans }} {{ event.startDate | date('M') | trans }}</div>
                                 </div>
                                 <a class="cursor-pointer"  data-toggle="modal" data-target="#bs-example-modal-lg-{{event.id}}">
                                     <div class="col-sm-11">
@@ -138,7 +138,7 @@
                                                         <i class="fa fa-calendar"></i>
                                                     </div>
                                                     <div class="" style="font-size: 22px;">
-                                                        {{ event.startDate | date('d/m/y H:i') }}
+                                                        {{ event.startDate | date('fullDateTime'|trans) }}
                                                         -
                                                         {{ event.endDate | date('H:i') }}
                                                     </div>
