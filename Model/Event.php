@@ -17,13 +17,17 @@ use JMS\Serializer\Annotation\Groups;
  */
 abstract class Event
 {
+    const vivible_private = 0;
+    const vivible_company = 1;
+    const vivible_public = 2;
+
     /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"search"})
+     * @Groups({"search","api"})
      */
     protected $id;
 
@@ -31,7 +35,7 @@ abstract class Event
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
-     * @Groups({"search"})
+     * @Groups({"search","api"})
      */
     protected $title;
 
@@ -39,7 +43,7 @@ abstract class Event
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=255,nullable=true)
-     * @Groups({"search"})
+     * @Groups({"search","api"})
      */
     protected $address;
 
@@ -47,7 +51,7 @@ abstract class Event
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
-     * @Groups({"search"})
+     * @Groups({"search","api"})
      */
     protected $description;
 
@@ -64,14 +68,14 @@ abstract class Event
      * @var DateTime
      *
      * @ORM\Column(name="startDate", type="datetime")
-     * @Groups({"search"})
+     * @Groups({"search","api"})
      */
     protected $startDate;
     /**
      * @var DateTime
      *
      * @ORM\Column(name="endDate", type="datetime",nullable=true)
-     * @Groups({"search"})
+     * @Groups({"search","api"})
      */
     protected $endDate;
     /**
@@ -90,6 +94,13 @@ abstract class Event
      * @OneToMany(targetEntity="Reminder", mappedBy="event", cascade={"persist","remove"})
      * */
     protected $reminders;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="visible", type="integer", length=10)
+     */
+    protected $visible;
 
     /**
      * @var DateTime
@@ -148,7 +159,7 @@ abstract class Event
     /**
      * Get users
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getUsers()
     {
@@ -157,7 +168,7 @@ abstract class Event
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -180,7 +191,7 @@ abstract class Event
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -203,7 +214,7 @@ abstract class Event
     /**
      * Get address
      *
-     * @return string 
+     * @return string
      */
     public function getAddress()
     {
@@ -226,7 +237,7 @@ abstract class Event
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -238,8 +249,9 @@ abstract class Event
     public function __construct()
     {
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
-        
+
         $this->reminders = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->visible = 0;
     }
 
     /**
@@ -258,7 +270,7 @@ abstract class Event
     /**
      * Get startDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -281,7 +293,7 @@ abstract class Event
     /**
      * Get endDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getEndDate()
     {
@@ -314,7 +326,7 @@ abstract class Event
     /**
      * Get contacts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getContacts()
     {
@@ -360,7 +372,7 @@ abstract class Event
     /**
      * Get latitude
      *
-     * @return float 
+     * @return float
      */
     public function getLatitude()
     {
@@ -383,7 +395,7 @@ abstract class Event
     /**
      * Get longitude
      *
-     * @return float 
+     * @return float
      */
     public function getLongitude()
     {
@@ -424,7 +436,7 @@ abstract class Event
      * Set reminders
      *
      * @param \Array $reminders
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function setReminders($reminders)
     {
@@ -434,7 +446,7 @@ abstract class Event
     /**
      * Get reminders
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getReminders()
     {
@@ -457,7 +469,7 @@ abstract class Event
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -480,11 +492,34 @@ abstract class Event
     /**
      * Get updated
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdated()
     {
         return $this->updated;
+    }
+
+    /**
+     * Set visible
+     *
+     * @param integer $visible
+     * @return Event
+     */
+    public function setVisible($visible)
+    {
+        $this->visible = $visible;
+
+        return $this;
+    }
+
+    /**
+     * Get visible
+     *
+     * @return integer
+     */
+    public function getVisible()
+    {
+        return $this->visible;
     }
 
     /**
@@ -503,7 +538,7 @@ abstract class Event
     /**
      * Get status
      *
-     * @return \Flower\ModelBundle\Entity\Planner\EventStatus 
+     * @return \Flower\ModelBundle\Entity\Planner\EventStatus
      */
     public function getStatus()
     {

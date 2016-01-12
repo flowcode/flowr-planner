@@ -28,6 +28,22 @@ class EventRepository extends EntityRepository
        	}
         return $qb->getQuery()->getResult();;
 	}
+
+	public function findAllByStartDate($from,$to,$limit,$offset){
+		$qb = $this->createQueryBuilder("m")
+        	->andWhere('m.startDate >= :from' )
+        	->andWhere('(m.visible = 1) OR (m.visible = 2)' )
+        	->setMaxResults($limit)
+        	->setFirstResult($offset)
+          ->orderBy("m.startDate",'asc');
+        $qb->setParameter("from", $from);
+       	if($to){
+       		$qb->andWhere('m.startDate <= :to' )
+       			->setParameter("to", $to);
+       	}
+        return $qb->getQuery()->getResult();;
+	}
+
   public function search($completeText, $texts,$from, $user,$limit = 10)
     {
         $qb = $this->createQueryBuilder("e");

@@ -1,0 +1,19 @@
+flower_api_planner_event_findallme:
+    path:     /events/me
+    defaults: { _controller: FlowerPlannerBundle:Api\Event:getMy }
+    methods: [GET]
+
+flower_api_planner_event_show:
+    path:     /events/{id}
+    defaults: { _controller: FlowerPlannerBundle:Api\Event:getById }
+    methods: [GET]
+
+flower_api_planner_event_findall:
+    path:     /events
+    defaults: { _controller: FlowerPlannerBundle:Api\Event:getAll }
+    methods: [GET]
+
+flower_api_planner_event_create:
+    path:     /events/new
+    defaults: { _controller: FlowerPlannerBundle:Api\Event:create }
+    methods: [POST]

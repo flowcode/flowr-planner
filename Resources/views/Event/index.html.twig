@@ -17,10 +17,13 @@
                             <a class="btn btn-link btn-xs" href={{ path('event_new') }}>
                                 <i class="fa fa-plus"></i> {{ 'Create a new %entity%'|trans({'%entity%': 'Event'}, 'Event') }}
                             </a>
+                            <a class="btn btn-link btn-xs" href={{ path('planner_calendar') }}>
+                                {{ 'Full Calendar'|trans({}, 'Event') }}
+                            </a>
                         </div>
                 </div>
                 <div class="box-body">
-                    
+
 
                     {% for event in today %}
                         <div class="row">
@@ -164,7 +167,7 @@
                                                     {% endif %}
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    
+
                                                 </div>
                                             </div>
                                         </div>
@@ -179,7 +182,7 @@
 
             </div>
 
-    </section>        
+    </section>
                     <div id="delete_confirm" class="modal fade">
                         <div class="modal-dialog">
                             <div class="modal-content">
