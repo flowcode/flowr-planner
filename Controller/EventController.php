@@ -3,6 +3,7 @@
 namespace Flower\PlannerBundle\Controller;
 
 use Doctrine\ORM\QueryBuilder;
+use Flower\ModelBundle\Entity\Board\History;
 use Flower\ModelBundle\Entity\Planner\Event;
 use Flower\ModelBundle\Entity\Planner\Reminder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -111,6 +112,8 @@ class EventController extends Controller
             $em->persist($event);
             $em->flush();
 
+            $this->get('board.service.history')->addSimpleUserActivity(History::TYPE_EVENT, $this->getUser(), $event, History::CRUD_CREATE);
+
             $this->get("flower.core.service.notification")->notificateNewEvent($event);
             $nextAction = $form->get('saveAndAdd')->isClicked() ? 'event_new' : 'event';
             return $this->redirectToRoute($nextAction);
@@ -210,6 +213,9 @@ class EventController extends Controller
             $event->setLongitude($event->getAddress()->getLongitude());
             $event->setAddress($event->getAddress()->getAddress());
             $em->flush();
+
+            $this->get('board.service.history')->addSimpleUserActivity(History::TYPE_EVENT, $this->getUser(), $event, History::CRUD_UPDATE);
+
             return $this->redirect($this->generateUrl('event', array('id' => $event->getId())));
         }
         $deleteForm = $this->createDeleteForm($event->getId(), 'event_delete');
