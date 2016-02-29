@@ -7,7 +7,14 @@ services:
         class: Flower\PlannerBundle\Form\Type\EventType
         arguments: ["@security.context"]
         tags:
-            - { name: form.type, alias: event_type }   
+            - { name: form.type, alias: event_type }
+
+    form.type.event_quick:
+            class: Flower\PlannerBundle\Form\Type\EventQuickType
+            arguments: ["@security.context"]
+            tags:
+                - { name: form.type, alias: event_type }
+
     flower.core.service.reminder:
         class: Flower\PlannerBundle\Service\ReminderService
         calls:

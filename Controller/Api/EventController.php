@@ -45,6 +45,7 @@ class EventController extends FOSRestController
         $view->getSerializationContext()->setGroups(array('api'));
         return $this->handleView($view);
     }
+
     public function publicGetAllAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -64,7 +65,8 @@ class EventController extends FOSRestController
         $view->getSerializationContext()->setGroups(array('public_api'));
         return $this->handleView($view);
     }
-     public function createAction(Request $request)
+
+    public function createAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $account = new Account();
@@ -75,21 +77,23 @@ class EventController extends FOSRestController
             $em->persist($account);
             $em->flush();
 
-            $response = array("success" => true, "message" => "Account created", "entity" =>$account );
+            $response = array("success" => true, "message" => "Account created", "entity" => $account);
             return $this->handleView(FOSView::create($response, Codes::HTTP_OK)->setFormat("json"));
         }
 
-        $response= array('success' => false, 'errors' => $form->getErrors());
+        $response = array('success' => false, 'errors' => $form->getErrors());
         return $this->handleView(FOSView::create($response, Codes::HTTP_NOT_FOUND)->setFormat("json"));
     }
 
-    private function getEventRepresentation($events){
+    private function getEventRepresentation($events)
+    {
         $eventsArr = array();
         foreach ($events as $event) {
             $eventsArr[] = array(
-                "title" => $event->getTitle(),
+                "title" => $event->getDescriptiveTitle(),
                 "start" => $event->getStartDate(),
                 "end" => $event->getEndDate(),
+                "className" => $event->getRelatedEntities(),
                 "allDay" => false,
             );
         }

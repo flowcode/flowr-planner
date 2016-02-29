@@ -4,6 +4,7 @@ namespace Flower\PlannerBundle\Controller;
 
 use Doctrine\ORM\QueryBuilder;
 use Flower\ModelBundle\Entity\Board\History;
+use Flower\ModelBundle\Entity\Clients\Account;
 use Flower\ModelBundle\Entity\Planner\Event;
 use Flower\ModelBundle\Entity\Planner\Reminder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Genemu\Bundle\FormBundle\Geolocation\AddressGeolocation;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+
 /**
  * Event controller.
  *
@@ -38,11 +40,44 @@ class EventController extends Controller
         $today = new \DateTime();
         $today->sub(new \DateInterval('PT1H'));
         $tomorrow = new \DateTime('tomorrow');
-        $today = $em->getRepository('FlowerModelBundle:Planner\Event')->findByStartDate( $this->getUser(),$today,$tomorrow,$limit,$page*$limit);
-        $next = $em->getRepository('FlowerModelBundle:Planner\Event')->findByStartDate( $this->getUser(),$tomorrow,null,$limit,$page*$limit);
+        $today = $em->getRepository('FlowerModelBundle:Planner\Event')->findByStartDate($this->getUser(), $today, $tomorrow, $limit, $page * $limit);
+        $next = $em->getRepository('FlowerModelBundle:Planner\Event')->findByStartDate($this->getUser(), $tomorrow, null, $limit, $page * $limit);
         return array(
             'today' => $today,
             'next' => $next,
+        );
+    }
+
+    /**
+     * Displays a form to create a new Event entity.
+     *
+     * @Route("/new/quick", name="event_new_quick")
+     * @Method("GET")
+     * @Template()
+     */
+    public function newQuickAction(Request $request)
+    {
+        $event = new Event();
+
+        $event->setStartDate(new \DateTime());
+        $event->setEndDate(new \DateTime());
+
+        if ($request->get("account")) {
+            $account = $this->getDoctrine()->getManager()->getRepository('FlowerModelBundle:Clients\Account')->find($request->get("account"));
+            $event->setAccount($account);
+        }
+
+        if ($request->get("project")) {
+            $project = $this->getDoctrine()->getManager()->getRepository('FlowerModelBundle:Project\Project')->find($request->get("project"));
+            $event->setProject($project);
+        }
+
+        $form = $this->createForm($this->get('form.type.event_quick'), $event, array(
+            'action' => $this->generateUrl('event_create'),
+            'method' => 'POST',
+        ));
+        return array(
+            'form' => $form->createView(),
         );
     }
 
@@ -75,20 +110,53 @@ class EventController extends Controller
             'form' => $form->createView(),
         );
     }
-    private function buildReminders($newEvent, $oldEvent = null){
+
+
+    private function buildReminders($newEvent, $oldEvent = null)
+    {
         $user = $this->getUser();
         foreach ($newEvent->getReminders() as $reminder) {
             $reminder->setUser($user);
         }
-        if($oldEvent != null){
+        if ($oldEvent != null) {
             foreach ($oldEvent->getReminders() as $reminder) {
-                if($reminder->getUser()->getId() != $user->getId()){
+                if ($reminder->getUser()->getId() != $user->getId()) {
                     $newEvent->addReminder($reminder);
                 }
             }
         }
         return $newEvent;
     }
+
+    /**
+     * Creates a new Event entity quickly.
+     *
+     * @Route("/create_quick", name="event_create_quick")
+     * @Method("POST")
+     * @Template("FlowerPlannerBundle:Event:newQuick.html.twig")
+     */
+    public function createQuickAction(Request $request)
+    {
+        $event = new Event();
+        $form = $this->createForm($this->get('form.type.event_quick'), $event);
+        if ($form->handleRequest($request)->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $event->setOwner($this->getUser());
+            $em->persist($event);
+            $em->flush();
+
+            $this->get('board.service.history')->addSimpleUserActivity(History::TYPE_EVENT, $this->getUser(), $event, History::CRUD_CREATE);
+
+            $this->get("flower.core.service.notification")->notificateNewEvent($event);
+
+            return new JsonResponse();
+        }
+
+        return array(
+            'form' => $form->createView(),
+        );
+    }
+
     /**
      * Creates a new Event entity.
      *
@@ -125,35 +193,41 @@ class EventController extends Controller
         );
     }
 
-    private function checkPermissions(Event $event){
+    private function checkPermissions(Event $event)
+    {
         $userId = $this->getUser()->getId();
-        if($event->getOwner()->getId() != $userId){
+        if ($event->getOwner()->getId() != $userId) {
             $error = true;
             foreach ($event->getUsers() as $user) {
-                if($user->getId() == $userId){
+                if ($user->getId() == $userId) {
                     $error = false;
                     break;
                 }
             }
-            if($error){
+            if ($error) {
                 throw new AccessDeniedHttpException();
             }
         }
     }
-    private function checkOwner(Event $event){
+
+    private function checkOwner(Event $event)
+    {
         $userId = $this->getUser()->getId();
-        if($event->getOwner()->getId() != $userId){
+        if ($event->getOwner()->getId() != $userId) {
             throw new AccessDeniedHttpException();
         }
     }
-    private function filterReminders(Event $event){
+
+    private function filterReminders(Event $event)
+    {
         $user = $this->getUser();
         foreach ($event->getReminders() as $reminder) {
-            if($reminder->getUser() != null && $reminder->getUser()->getId() != $user->getId()){
+            if ($reminder->getUser() != null && $reminder->getUser()->getId() != $user->getId()) {
                 $event->removeReminder($reminder);
             }
         }
     }
+
     /**
      * Displays a form to edit an existing Event entity.
      *
@@ -164,10 +238,10 @@ class EventController extends Controller
     public function editAction(Event $event)
     {
         $this->checkPermissions($event);
-        $event->setAddress(array("address"=> $event->getAddress()));
+        $event->setAddress(array("address" => $event->getAddress()));
         $this->filterReminders($event);
         //TODO. mejorar este fix barato que es para cuando no tienen reminders
-        if(count($event->getReminders()) == 0){
+        if (count($event->getReminders()) == 0) {
             $newReminder = new Reminder();
             $newReminder->setUnity(Reminder::$UNITY_MINUTES);
             $newReminder->setType(Reminder::$TYPE_EMAIL);
@@ -198,7 +272,7 @@ class EventController extends Controller
     {
         $oldReminders = clone $event->getReminders();
         $this->checkPermissions($event);
-        $event->setAddress(array("address"=> $event->getAddress()));
+        $event->setAddress(array("address" => $event->getAddress()));
         $editForm = $this->createForm($this->get('form.type.event'), $event, array(
             'action' => $this->generateUrl('event_update', array('id' => $event->getid())),
             'method' => 'PUT',
@@ -207,7 +281,7 @@ class EventController extends Controller
             $em = $this->getDoctrine()->getManager();
             $oldEvent = new Event();
             $oldEvent->setReminders($oldReminders);
-            $event = $this->buildReminders($event,$oldEvent);
+            $event = $this->buildReminders($event, $oldEvent);
             $event->updateRedminders();
             $event->setLatitude($event->getAddress()->getLatitude());
             $event->setLongitude($event->getAddress()->getLongitude());
@@ -235,28 +309,27 @@ class EventController extends Controller
      */
     public function deleteAction(Event $event, Request $request)
     {
-            $this->checkOwner($event);
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($event);
-            $em->flush();
-     
+        $this->checkOwner($event);
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($event);
+        $em->flush();
+
         return $this->redirect($this->generateUrl('event'));
     }
 
     /**
      * Create Delete form
      *
-     * @param integer                       $id
-     * @param string                        $route
+     * @param integer $id
+     * @param string $route
      * @return Form
      */
     protected function createDeleteForm($id, $route)
     {
         return $this->createFormBuilder(null, array('attr' => array('id' => 'delete')))
-                        ->setAction($this->generateUrl($route, array('id' => $id)))
-                        ->setMethod('DELETE')
-                        ->getForm()
-        ;
+            ->setAction($this->generateUrl($route, array('id' => $id)))
+            ->setMethod('DELETE')
+            ->getForm();
     }
 
 

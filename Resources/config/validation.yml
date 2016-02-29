@@ -1,0 +1,4 @@
+Flower\ModelBundle\Entity\Planner\Event:
+    properties:
+        title:
+            - NotBlank: ~

@@ -84,7 +84,7 @@ abstract class Event
      * @ORM\Column(name="latitude", type="float",nullable=true)
      */
     protected $latitude;
-        /**
+    /**
      * @var float
      *
      * @ORM\Column(name="longitude", type="float",nullable=true)
@@ -94,6 +94,18 @@ abstract class Event
      * @OneToMany(targetEntity="Reminder", mappedBy="event", cascade={"persist","remove"})
      * */
     protected $reminders;
+
+    /**
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Clients\Account")
+     * @JoinColumn(name="account_id", referencedColumnName="id")
+     */
+    protected $account;
+
+    /**
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Project\Project")
+     * @JoinColumn(name="project_id", referencedColumnName="id")
+     */
+    protected $project;
 
     /**
      * @var integer
@@ -108,6 +120,7 @@ abstract class Event
      * @ORM\Column(name="created", type="datetime")
      */
     protected $created;
+
     /**
      * @var DateTime
      * @Gedmo\Timestampable(on="update")
@@ -120,6 +133,7 @@ abstract class Event
      * @JoinTable(name="user_event")
      */
     protected $users;
+
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\User\User", inversedBy="events")
      * @JoinColumn(name="user_event_id", referencedColumnName="id")
@@ -165,6 +179,7 @@ abstract class Event
     {
         return $this->users;
     }
+
     /**
      * Get id
      *
@@ -196,6 +211,40 @@ abstract class Event
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * Get event type
+     *
+     * @return array
+     */
+    public function getRelatedEntities()
+    {
+        $entities = array("default");
+        if ($this->account) {
+            $entities[] = 'account';
+        } elseif ($this->project) {
+            $entities[] = 'project';
+        }
+
+        return $entities;
+    }
+
+    /**
+     * Get descriptive title
+     *
+     * @return string
+     */
+    public function getDescriptiveTitle()
+    {
+        $title = "";
+        if ($this->account) {
+            $title .= "[" . $this->getAccount()->getName() . "] ";
+        } elseif ($this->project) {
+            $title .= "[" . $this->getProject()->getName() . "] ";
+        }
+        $title .= $this->title;
+        return $title;
     }
 
     /**
@@ -243,6 +292,7 @@ abstract class Event
     {
         return $this->description;
     }
+
     /**
      * Constructor
      */
@@ -415,13 +465,16 @@ abstract class Event
 
         return $this;
     }
-    public function updateRedminders(){
+
+    public function updateRedminders()
+    {
         foreach ($this->getReminders() as $reminder) {
             $eventDate = clone $this->getStartDate();
-            $date = $eventDate->sub(new \DateInterval($reminder->getPrefixForInterval().$reminder->getAmount().$reminder->getUnityForInterval()));
+            $date = $eventDate->sub(new \DateInterval($reminder->getPrefixForInterval() . $reminder->getAmount() . $reminder->getUnityForInterval()));
             $reminder->setDate($date);
         }
     }
+
     /**
      * Remove reminders
      *
@@ -432,6 +485,7 @@ abstract class Event
         $reminders->setEvent(null);
         $this->reminders->removeElement($reminders);
     }
+
     /**
      * Set reminders
      *
@@ -443,6 +497,7 @@ abstract class Event
         $this->reminders = $reminders;
         return $this;
     }
+
     /**
      * Get reminders
      *
@@ -544,4 +599,38 @@ abstract class Event
     {
         return $this->status;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAccount()
+    {
+        return $this->account;
+    }
+
+    /**
+     * @param mixed $account
+     */
+    public function setAccount($account)
+    {
+        $this->account = $account;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * @param mixed $project
+     */
+    public function setProject($project)
+    {
+        $this->project = $project;
+    }
+
+
 }

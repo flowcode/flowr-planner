@@ -5,21 +5,21 @@
 {% block body %}
     <section class="content-header">
         <h1>
-            <a href="{{ path('event') }}"> {{ 'Event' | trans({}, 'Event')}}</a>
+            <a href="{{ path('event') }}"> {{ 'Event' | trans({}, 'Event') }}</a>
             /
-            {{ 'New Event' | trans({}, 'Event')}}
+            {{ 'New Event' | trans({}, 'Event') }}
         </h1>
-    </section>        
+    </section>
     <section class="content">
         <div class="box">
             {{ form_start(form) }}
             <div class="box-body">
-                
+
                 <div class="form-group">
-                        {{ form_label(form.title) }}
-                    
+                    {{ form_label(form.title) }}
+
                     <div class="col-sm-10">
-                            {{ form_widget(form.title) }}
+                        {{ form_widget(form.title) }}
                     </div>
                 </div>
                 {{ form_widget(form.address) }}
@@ -29,50 +29,50 @@
                 {{ form_row(form.status) }}
                 {{ form_row(form.startDate) }}
                 {{ form_row(form.endDate) }}
-                </div>
-                
-                <div class="box-header">
-                    <h3 class="box-title">{{ 'Reminders'|trans({}, 'Event') }}</h3>
-                </div>
-                <div class="box-body" id="contentReminders" >
-                    {# iterate over each existing tag and render its only field: name #}
-                    {% for reminder in form.reminders %}
-                        <div class="form-group reminders">
-                            <div class="col-sm-2 col-xs-offset-2">
-                                    {{ form_widget(reminder.type) }}
-                            </div>
-                            <div class="col-sm-2">
-                                    {{ form_widget(reminder.unity) }}
-                            </div>
-                            <div class="col-sm-2">
-                                    {{ form_widget(reminder.amount) }}
-                            </div>
-                            <div class="col-sm-2 tools">
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-                {{ form_end(form) }}
-                <div class="hidden" id="reminderTemplate">
+            </div>
+
+            <div class="box-header">
+                <h3 class="box-title">{{ 'Reminders'|trans({}, 'Event') }}</h3>
+            </div>
+            <div class="box-body" id="contentReminders">
+                {# iterate over each existing tag and render its only field: name #}
+                {% for reminder in form.reminders %}
                     <div class="form-group reminders">
                         <div class="col-sm-2 col-xs-offset-2">
-                                {{ form_widget(form.reminders.vars.prototype.type) }}
+                            {{ form_widget(reminder.type) }}
                         </div>
                         <div class="col-sm-2">
-                                {{ form_widget(form.reminders.vars.prototype.unity) }}
+                            {{ form_widget(reminder.unity) }}
                         </div>
                         <div class="col-sm-2">
-                                {{ form_widget(form.reminders.vars.prototype.amount) }}
+                            {{ form_widget(reminder.amount) }}
                         </div>
                         <div class="col-sm-2 tools">
                         </div>
                     </div>
-                </div>
-                <div class="box-footer">
-                    <div class="btn-group record_actions">
+                {% endfor %}
+            </div>
+            {{ form_end(form) }}
+            <div class="hidden" id="reminderTemplate">
+                <div class="form-group reminders">
+                    <div class="col-sm-2 col-xs-offset-2">
+                        {{ form_widget(form.reminders.vars.prototype.type) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.reminders.vars.prototype.unity) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_widget(form.reminders.vars.prototype.amount) }}
+                    </div>
+                    <div class="col-sm-2 tools">
                     </div>
                 </div>
             </div>
+            <div class="box-footer">
+                <div class="btn-group record_actions">
+                </div>
+            </div>
+        </div>
         </div>
     </section>
 {% endblock %}
@@ -81,8 +81,8 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        var tagARemove = '<a href="#">{{"remove" | trans({}, "Event")}}</a>'
-        var tagAAddOther = '<div class="col-sm-2 col-xs-offset-2"><a href="#" class="add_tag_link">{{"Add a Reminder" | trans({}, "Event")}}</a></div>'
+        var tagARemove = '<a href="#">{{ "remove" | trans({}, "Event") }}</a>'
+        var tagAAddOther = '<div class="col-sm-2 col-xs-offset-2"><a href="#" class="add_tag_link">{{ "Add a Reminder" | trans({}, "Event") }}</a></div>'
     </script>
     <script src="{{ asset('bundles/flowerplanner/js/reminders.js') }}" type="text/javascript"></script>
     {{ form_javascript(form) }}
