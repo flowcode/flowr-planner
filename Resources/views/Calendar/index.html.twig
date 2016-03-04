@@ -2,6 +2,10 @@
 
 {% block title %}{{ '%entity% list'|trans({'%entity%': 'Event'}, 'Event') }} - {{ parent() }}{% endblock %}
 
+{% block app_menu %}
+    {{ include("FlowerPlannerBundle::appnav.html.twig", { 'app_planner': true }) }}
+{% endblock %}
+
 {% block body %}
     <section class="content-header">
         <h1>{{ 'Calendar' | trans({}, 'Event') }}</h1>
