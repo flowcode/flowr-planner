@@ -62,6 +62,11 @@ class EventController extends Controller
         $event->setStartDate(new \DateTime());
         $event->setEndDate(new \DateTime());
 
+        if ($request->get("opportunity")) {
+            $opportunity = $this->getDoctrine()->getManager()->getRepository('FlowerModelBundle:Clients\Opportunity')->find($request->get("opportunity"));
+            $event->setOpportunity($opportunity);
+        }
+
         if ($request->get("account")) {
             $account = $this->getDoctrine()->getManager()->getRepository('FlowerModelBundle:Clients\Account')->find($request->get("account"));
             $event->setAccount($account);
@@ -71,6 +76,8 @@ class EventController extends Controller
             $project = $this->getDoctrine()->getManager()->getRepository('FlowerModelBundle:Project\Project')->find($request->get("project"));
             $event->setProject($project);
         }
+
+
 
         $form = $this->createForm($this->get('form.type.event_quick'), $event, array(
             'action' => $this->generateUrl('event_create'),

@@ -39,6 +39,11 @@ class EventType extends AbstractType
                     'property' => 'lastname',
                     'multiple' => true,
                     'required' => false))
+            ->add('opportunity', 'genemu_jqueryselect2_entity',
+                array('class' => 'Flower\ModelBundle\Entity\Clients\Opportunity',
+                    'property' => 'name',
+                    'multiple' => false,
+                    'required' => false))
             ->add('account', 'genemu_jqueryselect2_entity',
                 array('class' => 'Flower\ModelBundle\Entity\Clients\Account',
                     'property' => 'name',

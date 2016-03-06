@@ -71,6 +71,7 @@ abstract class Event
      * @Groups({"search","api"})
      */
     protected $startDate;
+
     /**
      * @var DateTime
      *
@@ -78,18 +79,21 @@ abstract class Event
      * @Groups({"search","api"})
      */
     protected $endDate;
+
     /**
      * @var float
      *
      * @ORM\Column(name="latitude", type="float",nullable=true)
      */
     protected $latitude;
+
     /**
      * @var float
      *
      * @ORM\Column(name="longitude", type="float",nullable=true)
      */
     protected $longitude;
+
     /**
      * @OneToMany(targetEntity="Reminder", mappedBy="event", cascade={"persist","remove"})
      * */
@@ -100,6 +104,12 @@ abstract class Event
      * @JoinColumn(name="account_id", referencedColumnName="id")
      */
     protected $account;
+
+    /**
+     * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Clients\Opportunity")
+     * @JoinColumn(name="opportunity_id", referencedColumnName="id")
+     */
+    protected $opportunity;
 
     /**
      * @ManyToOne(targetEntity="\Flower\ModelBundle\Entity\Project\Project")
@@ -221,7 +231,9 @@ abstract class Event
     public function getRelatedEntities()
     {
         $entities = array("default");
-        if ($this->account) {
+        if ($this->opportunity) {
+            $entities[] = 'opportunity';
+        } elseif ($this->account) {
             $entities[] = 'account';
         } elseif ($this->project) {
             $entities[] = 'project';
@@ -238,7 +250,9 @@ abstract class Event
     public function getDescriptiveTitle()
     {
         $title = "";
-        if ($this->account) {
+        if ($this->opportunity) {
+            $title .= "[" . $this->getOpportunity()->getName() . "] ";
+        }elseif ($this->account) {
             $title .= "[" . $this->getAccount()->getName() . "] ";
         } elseif ($this->project) {
             $title .= "[" . $this->getProject()->getName() . "] ";
@@ -630,6 +644,22 @@ abstract class Event
     public function setProject($project)
     {
         $this->project = $project;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOpportunity()
+    {
+        return $this->opportunity;
+    }
+
+    /**
+     * @param mixed $opportunity
+     */
+    public function setOpportunity($opportunity)
+    {
+        $this->opportunity = $opportunity;
     }
 
 

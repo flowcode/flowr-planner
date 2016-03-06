@@ -16,16 +16,19 @@
             <div class="box-body">
                 <ul class="list-inline">
                     <li>
-                        <span class="label label-project">{{ 'projects'|trans }}</span>
+                        <span class="label label-opportunity">{{ 'opportunities'|trans|title }}</span>
                     </li>
                     <li>
-                        <span class="label label-account">{{ 'accounts'|trans }}</span>
+                        <span class="label label-project">{{ 'projects'|trans|title }}</span>
                     </li>
                     <li>
-                        <span class="label label-event-company">{{ 'company'|trans }}</span>
+                        <span class="label label-account">{{ 'accounts'|trans|title }}</span>
                     </li>
                     <li>
-                        <span class="label label-default">{{ 'default'|trans }}</span>
+                        <span class="label label-event-company">{{ 'company'|trans|title }}</span>
+                    </li>
+                    <li>
+                        <span class="label label-default">{{ 'default'|trans|title }}</span>
                     </li>
                 </ul>
                 <div ng-view>

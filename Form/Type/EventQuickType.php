@@ -32,6 +32,7 @@ class EventQuickType extends AbstractType
                 'choices_as_values' => true,
             ))
             ->add('contacts')
+            ->add('opportunity')
             ->add('account')
             ->add('project')
             ->add('users')
