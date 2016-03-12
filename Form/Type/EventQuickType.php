@@ -36,10 +36,23 @@ class EventQuickType extends AbstractType
             ->add('account')
             ->add('project')
             ->add('users')
-            ->add('startDate')
-            ->add('endDate')
-            ->add('save', 'submit', array('label' => 'Save'))
-        ;
+            ->add('startDate', 'collot_datetime', array('pickerOptions' =>
+                array('format' => 'dd/mm/yyyy  hh:ii',
+                    'autoclose' => true,
+                    'todayBtn' => true,
+                    'todayHighlight' => true,
+                    'keyboardNavigation' => true,
+                    'language' => 'en',
+                )))
+            ->add('endDate', 'collot_datetime', array('required' => false, 'pickerOptions' =>
+                array('format' => 'dd/mm/yyyy  hh:ii',
+                    'autoclose' => true,
+                    'todayBtn' => true,
+                    'todayHighlight' => true,
+                    'keyboardNavigation' => true,
+                    'language' => 'en',
+                )))
+            ->add('save', 'submit', array('label' => 'Save'));
     }
 
     /**
