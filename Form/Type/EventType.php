@@ -26,7 +26,10 @@ class EventType extends AbstractType
         $user = $this->securityContext->getToken()->getUser();
         $builder
             ->add('title')
-            ->add('description', null, array('required' => false, 'attr' => array('class' => 'textarea-wysihtml5')))
+            ->add('description', 'ckeditor', array(
+                'required' => false,
+                'config_name' => 'minimal'
+            ))
             ->add('status', null, array('required' => false))
             ->add('visible', 'choice', array(
                 'choices' => array('Private' => 0, 'Company' => 1, 'Public' => 2),
@@ -34,11 +37,16 @@ class EventType extends AbstractType
             ))
             ->add('address', 'genemu_jquerygeolocation',
                 array('label' => false, 'required' => false))
-            ->add('contacts', 'genemu_jqueryselect2_entity',
-                array('class' => 'Flower\ModelBundle\Entity\Clients\Contact',
-                    'property' => 'lastname',
-                    'multiple' => true,
-                    'required' => false))
+            ->add('contacts', 'tetranz_select2entity', [
+                'multiple' => true,
+                'remote_route' => 'flower_api_clients_contact_findall_simple',
+                'class' => '\Flower\ModelBundle\Entity\Clients\Contact',
+                'text_property' => 'name',
+                'minimum_input_length' => 2,
+                'page_limit' => 10,
+                'language' => 'es',
+                'placeholder' => 'Seleccionar contactos',
+            ])
             ->add('opportunity', 'genemu_jqueryselect2_entity',
                 array('class' => 'Flower\ModelBundle\Entity\Clients\Opportunity',
                     'property' => 'name',
