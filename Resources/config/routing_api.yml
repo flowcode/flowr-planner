@@ -14,6 +14,6 @@ flower_api_planner_event_findall:
     methods: [GET]
 
 flower_api_planner_event_create:
-    path:     /events/new
+    path:     /events
     defaults: { _controller: FlowerPlannerBundle:Api\Event:create }
     methods: [POST]

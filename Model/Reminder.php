@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\Groups;
 /**
  * Reminder
  */
@@ -25,6 +26,7 @@ abstract class Reminder
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"search","api", "full"})
      */
     protected $id;
 
@@ -32,6 +34,7 @@ abstract class Reminder
      * @var integer
      *
      * @ORM\Column(name="unity", type="integer")
+     * @Groups({"search","api", "full"})
      */
     protected $unity;
 
@@ -39,6 +42,7 @@ abstract class Reminder
      * @var integer
      *
      * @ORM\Column(name="amount", type="integer")
+     * @Groups({"search","api", "full"})
      */
     protected $amount;
 
@@ -46,6 +50,7 @@ abstract class Reminder
      * @var integer
      *
      * @ORM\Column(name="type", type="integer")
+     * @Groups({"search","api", "full"})
      */
     protected $type;
 
@@ -53,6 +58,7 @@ abstract class Reminder
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
+     * @Groups({"search","api", "full"})
      */
     protected $date;
     /**
@@ -77,6 +83,7 @@ abstract class Reminder
     /**
      * @ORM\ManyToOne(targetEntity="\Flower\ModelBundle\Entity\User\User")
      * @ORM\JoinColumn(name="user", referencedColumnName="id")
+     * @Groups({"search","api", "full"})
      */
      protected $user;
 

@@ -96,6 +96,7 @@ abstract class Event
 
     /**
      * @OneToMany(targetEntity="Reminder", mappedBy="event", cascade={"persist","remove"})
+     * @Groups({"search","api", "full"})
      * */
     protected $reminders;
 
@@ -121,6 +122,7 @@ abstract class Event
      * @var integer
      *
      * @ORM\Column(name="visible", type="integer", length=10)
+     * @Groups({"search","api", "full"})
      */
     protected $visible;
 
@@ -141,6 +143,7 @@ abstract class Event
     /**
      * @ManyToMany(targetEntity="\Flower\ModelBundle\Entity\User\User", inversedBy="events")
      * @JoinTable(name="user_event")
+     * @Groups({"search","api", "full"})
      */
     protected $users;
 

@@ -2,6 +2,8 @@
 
 namespace Flower\PlannerBundle\Controller\Api;
 
+use Flower\ModelBundle\Entity\Planner\Event;
+use Flower\ModelBundle\Entity\Planner\Reminder;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
 use FOS\RestBundle\View\View as FOSView;
@@ -39,10 +41,10 @@ class EventController extends FOSRestController
     public function getByIdAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $account = $em->getRepository('FlowerModelBundle:Clients\Account')->find($id);
+        $account = $em->getRepository('FlowerModelBundle:Planner\Event')->find($id);
 
         $view = FOSView::create($account, Codes::HTTP_OK)->setFormat('json');
-        $view->getSerializationContext()->setGroups(array('api'));
+        $view->getSerializationContext()->setGroups(array('api', 'full'));
         return $this->handleView($view);
     }
 
@@ -69,33 +71,66 @@ class EventController extends FOSRestController
     public function createAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $account = new Account();
-        $form = $this->createForm(new AccountType(), $account);
-
-        $form->submit($request);
-        if ($form->isValid()) {
-            $em->persist($account);
-            $em->flush();
-
-            $response = array("success" => true, "message" => "Account created", "entity" => $account);
-            return $this->handleView(FOSView::create($response, Codes::HTTP_OK)->setFormat("json"));
+        if ($request->get("id")) {
+            $event = $em->getRepository('FlowerModelBundle:Planner\Event')->find($request->get("id"));
+        } else {
+            $event = new Event();
+            $event->setOwner($this->getUser());
+            $event->setVisible(0);
         }
 
-        $response = array('success' => false, 'errors' => $form->getErrors());
-        return $this->handleView(FOSView::create($response, Codes::HTTP_NOT_FOUND)->setFormat("json"));
+        $event->setTitle($request->get("title"));
+        $event->setDescription($request->get("description"));
+        $event->setStartDate(new \DateTime($request->get("start_date")));
+        $event->setEndDate(new \DateTime($request->get("end_date")));
+
+        $reminders = $request->get("reminders", array());
+        foreach ($reminders as $reminder) {
+            $reminderInDB = null;
+            $found = false;
+            foreach ($event->getReminders() as $oldReminders) {
+                if ($oldReminders->getId() == $reminder['id']) {
+                    $found = true;
+                }
+            }
+            if (!$found) {
+                $newReminder = new Reminder();
+                $newReminder->setAmount($reminder['amount']);
+                $newReminder->setType($reminder['type']);
+                $newReminder->setUnity($reminder['unity']);
+                $newReminder->setUser($this->getUser());
+                $newReminder->setDate(new \DateTime());
+
+                $event->addReminder($newReminder);
+            }
+        }
+
+        $em->persist($event);
+        $em->flush();
+
+        $response = array("success" => true, "message" => "Account created", "entity" => $this->getEventArr($event));
+        return $this->handleView(FOSView::create($response, Codes::HTTP_OK)->setFormat("json"));
+    }
+
+
+    private function getEventArr($event)
+    {
+        $eventArr = array(
+            "id" => $event->getId(),
+            "title" => $event->getDescriptiveTitle(),
+            "start" => $event->getStartDate(),
+            "end" => $event->getEndDate(),
+            "className" => $event->getRelatedEntities(),
+            "allDay" => false,
+        );
+        return $eventArr;
     }
 
     private function getEventRepresentation($events)
     {
         $eventsArr = array();
         foreach ($events as $event) {
-            $eventsArr[] = array(
-                "title" => $event->getDescriptiveTitle(),
-                "start" => $event->getStartDate(),
-                "end" => $event->getEndDate(),
-                "className" => $event->getRelatedEntities(),
-                "allDay" => false,
-            );
+            $eventsArr[] = $this->getEventArr($event);
         }
         return $eventsArr;
     }
