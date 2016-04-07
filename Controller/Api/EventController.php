@@ -84,6 +84,20 @@ class EventController extends FOSRestController
         $event->setStartDate(new \DateTime($request->get("start_date")));
         $event->setEndDate(new \DateTime($request->get("end_date")));
 
+        /* users */
+        $users = $request->get("users", array());
+        foreach ($users as $userId) {
+            $user = $em->getRepository('FlowerModelBundle:User\User')->find($userId);
+            $event->addUser($user);
+        }
+
+        /* account */
+        if ($request->get('account_id')) {
+            $account = $em->getRepository('FlowerModelBundle:Clients\Account')->find($request->get('account_id'));
+            $event->setAccount($account);
+        }
+
+        /* reminders */
         $reminders = $request->get("reminders", array());
         foreach ($reminders as $reminder) {
             $reminderInDB = null;
