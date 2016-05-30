@@ -15,6 +15,28 @@ use Flower\ClientsBundle\Form\Type\Api\AccountType;
  */
 class EventController extends FOSRestController
 {
+
+    public function getMinesOfWeekAction(Request $request)
+    {
+        $dt_min = new \DateTime("last saturday"); // Edit
+        $dt_min->modify('+1 day'); // Edit
+        $dt_max = clone($dt_min);
+        $dt_max->modify('+6 days');
+
+        $em = $this->getDoctrine()->getManager();
+        $events = $em->getRepository('FlowerModelBundle:Planner\Event')->findByStartDate(
+            $this->getUser(),
+            $dt_min,
+            $dt_max,
+            1000,
+            0);
+
+        $eventsOutput = $this->getEventRepresentation($events);
+
+        $view = FOSView::create($eventsOutput, Codes::HTTP_OK)->setFormat('json');
+        return $this->handleView($view);
+    }
+
     public function getMyAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -45,26 +67,6 @@ class EventController extends FOSRestController
 
         $view = FOSView::create($account, Codes::HTTP_OK)->setFormat('json');
         $view->getSerializationContext()->setGroups(array('api', 'full'));
-        return $this->handleView($view);
-    }
-
-    public function publicGetAllAction(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $accounts = $em->getRepository('FlowerModelBundle:Clients\Account')->findAll();
-
-        $view = FOSView::create($accounts, Codes::HTTP_OK)->setFormat('json');
-        $view->getSerializationContext()->setGroups(array('public_api'));
-        return $this->handleView($view);
-    }
-
-    public function publicGetByIdAction(Request $request, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $account = $em->getRepository('FlowerModelBundle:Clients\Account')->find($id);
-
-        $view = FOSView::create($account, Codes::HTTP_OK)->setFormat('json');
-        $view->getSerializationContext()->setGroups(array('public_api'));
         return $this->handleView($view);
     }
 

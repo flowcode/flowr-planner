@@ -1,0 +1,24 @@
+flower_api_planner_public_event_mines_week:
+    path:     /events/mines/week
+    defaults: { _controller: FlowerPlannerBundle:Api\Event:getMinesOfWeek }
+    methods: [GET]
+
+flower_api_planner_public_event_findallme:
+    path:     /events/me
+    defaults: { _controller: FlowerPlannerBundle:Api\Event:getMy }
+    methods: [GET]
+
+flower_api_planner_public_event_show:
+    path:     /events/{id}
+    defaults: { _controller: FlowerPlannerBundle:Api\Event:getById }
+    methods: [GET]
+
+flower_api_planner_public_event_findall:
+    path:     /events
+    defaults: { _controller: FlowerPlannerBundle:Api\Event:getAll }
+    methods: [GET]
+
+flower_api_planner_public_event_create:
+    path:     /events
+    defaults: { _controller: FlowerPlannerBundle:Api\Event:create }
+    methods: [POST]
